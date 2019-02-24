@@ -1,0 +1,19 @@
+{
+  "name": "@screaminsauce/screaminserver",
+  "version": "0.0.1",
+  "description": "A server capable of loading API routes or GUI webapps via Hapi.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeff Claybaugh",
+  "license": "ISC",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "hapi": "^18.1.0",
+    "inert": "^5.1.2",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.1.13",
+    "vision": "^5.4.4"
+  }
+}
