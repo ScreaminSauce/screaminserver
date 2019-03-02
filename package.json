@@ -1,8 +1,8 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A server capable of loading API routes or GUI webapps via Hapi.js",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
