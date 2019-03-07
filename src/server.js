@@ -1,143 +1,120 @@
 'use strict';
+
 const hapi = require('hapi');
-const path = require('path');
 const inert = require('inert');
 const vision = require('vision');
 const bunyan = require('bunyan');
-const dbConnections = require('./dbConnections');
+const path = require('path');
+
+const HapiAuthCookie = require('hapi-auth-cookie');
+const moduleManager = require('./moduleManager');
 
 class ScreaminServer {
     constructor(config) {
         this._config = config;
         this._server = hapi.Server(config.options);
-        this._logger = bunyan.createLogger({
-            name: config.name
-        });
-        this._dbConnections = new dbConnections(this._logger);
+        this._logger = bunyan.createLogger({ name: config.name });
+        this._moduleManager = new moduleManager(this._logger, this._config.type, this._server, this._config.wwwDir);
     }
 
-    _initializeDbConnections() {
-        //Read in specified modules and register their db connections.
-        if (this._config.type == "api" || "both") {
-            let promArr = [];
-            let modules = this._config.modules;
-            modules.forEach((mod) => {
-                if (mod.dbConnections) {
-                    mod.dbConnections.forEach((dbConn) => {
-                        promArr.push(this._dbConnections.createConnection(dbConn));
-                    })
-                }
-            })
+    _registerAuthentication(){
+        if(this._config.auth){
+            const cache = this._server.cache({ segment: 'sessions', expiresIn: 24 * 60 * 60 * 1000 });
+            this._server.app.cache = cache;
 
-            return Promise.all(promArr)
-                .catch((err) => {
-                    this._logger.error({
-                        error: err
-                    }, "Error initializing db connections: ");
-                    process.exit(1);
-                })
-        } else {
-            return Promise.resolve();
-        }
-    }
+            return this._server.register(HapiAuthCookie)
+                .then(()=>{
+                    let options = {
+                        password: this._config.auth.secret,
+                        cookie: this._config.auth.cookieName,
+                        isSecure: this._config.auth.isSecure,
+                        redirectTo: this._config.auth.redirectTo,
+                        validateFunc: async (request, session) => {
 
-    _initializeApiServices() {
-        //Read in specified modules and register their routes.
-        if (this._config.type == "api" || "both") {
-            let modules = this._config.modules;
-
-            modules.forEach((mod) => {
-                if (mod.api) {
-                    this._logger.info("Registering API Module: " + mod.name);
-
-                    //Instantiate API class, feeding it needed configuration.
-                    let apiModule = mod.api(
-                        this._logger.child({
-                            apiModule: mod.name + "-api"
-                        }), "/api/" + mod.name, this._dbConnections
-                    );
-
-                    //Add Routes
-                    apiModule.forEach((route) => {
-                        this._server.route(route);
-                    })
-                } else {
-                    this._logger.info("No API service for module: " + mod.name);
-                }
-            })
-
-        }
-
-        return Promise.resolve();
-    }
-
-    _initializeWebAppServices() {
-        if (this._config.type == "gui" || "both") {
-            this._server.register(inert);
-            this._server.register(vision);
-    
-            let modules = this._config.modules;
-            let buildDir = this._config.wwwDir;
-            
-            let promArr = [Promise.resolve()]
-    
-            modules.forEach((mod) => {
-                if (mod.gui) {
-                    let outputFolder = path.resolve(buildDir + "/" + mod.name);
-    
-                    this._logger.info("Registering/Building WebApp Module: " + mod.name);
-                    this._logger.info("Deploying to: " + outputFolder);
-    
-                    let webAppModule = new mod.gui(outputFolder);
-                    promArr.push(webAppModule.build());
-                } else {
-                    this._logger.info("No WebApp to be built for module: " + mod.name);
-                }
-            })
-    
-            return Promise.all(promArr)
-                .then(() => {
-                    this._server.route({
-                        method: 'GET',
-                        path: '/' + this._config.wwwDir + '/{param*}',
-                        handler: {
-                            directory: {
-                                path: path.resolve(this._config.wwwDir),
-                                listing: true
+                            const cached = await cache.get(session.sid);
+                            const out = {
+                                valid: !!cached
+                            };
+                
+                            if (out.valid) {
+                                out.credentials = cached.account;
                             }
+                
+                            return out;
                         }
-                    })
-                })
-                .catch((err) => {
-                    this._logger.error({
-                        error: err
-                    }, "Error starting up webapp server.");
-                    process.exit(1);
+                    }
+                    this._server.auth.strategy('session', 'cookie', options);
+                    this._server.auth.default('session');
                 })
         } else {
             return Promise.resolve();
         }
+        
     }
 
-    startup() {
-        return this._initializeDbConnections()
-            .then(() => {
-                return this._initializeApiServices();
+    _registerStaticRoutes(){
+        return Promise.all([
+            this._server.register(inert), 
+            this._server.register(vision)
+        ])
+            .then(()=>{
+                this._server.route({
+                    method: 'GET',
+                    path: '/' + this._config.wwwDir + '/{param*}',
+                    handler: {
+                        directory: {
+                            path: path.resolve(this._config.wwwDir),
+                            listing: true
+                        }
+                    },
+                    config: {
+                        auth: false
+                    }
+                })
+                this._server.route({
+                    method: 'GET',
+                    path: '/api/reserved/appInfo',
+                    handler: ()=>{
+                        return this._moduleManager.getGuiAppInfo();
+                    },
+                    config: {
+                        auth: false
+                    }
+                })
             })
-            .then(() => {
-                return this._initializeWebAppServices();
+    }
+
+    _registerModules(){
+        let promArr = [];
+        if (this._config && this._config.modules.length > 0){
+            this._config.modules.forEach((mod)=>{
+                promArr.push(this._moduleManager.registerModule(mod));
             })
-            .then(() => {
+        } else {
+            throw new Error("Nothing to load, or no configuration to use!");
+        }
+        return Promise.all(promArr);
+    }
+
+    startup(){
+        return this._registerAuthentication()
+            .then(()=>{
+                return this._registerModules();
+            })
+            .then(()=>{
+                if (this._moduleManager.hasGuiModules()){
+                    return this._registerStaticRoutes()
+                } else {
+                    return Promise.resolve();
+                }
+            })
+            .then(()=>{
                 return this._server.start();
             })
-            .then(() => {
+            .then(()=>{
                 this._logger.info(`Server started: http://${this._config.options.host}:${this._config.options.port}`);
             })
-            .catch((err) => {
-                this._logger.error({
-                    error: err
-                }, "Error during server startup.")
-            })
+            
     }
 
     shutdown() {
