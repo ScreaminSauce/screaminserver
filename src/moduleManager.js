@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const dbConnections = require('./dbConnections');
+const _ = require('lodash');
 
 class ModuleManager {
     constructor(logger, type, server, wwwDir){
@@ -49,7 +50,11 @@ class ModuleManager {
             this._logger.info("Deploying to: " + outputFolder);
 
             let webAppModule = new mod.gui(outputFolder);
-            this._regGuiModules[mod.name] = webAppModule.getAppInfo();
+            
+            let appsToRegister = webAppModule.getAppInfo();
+            if (appsToRegister && appsToRegister.length > 0){
+                this.registerGuiApps(appsToRegister);
+            }
 
             return webAppModule.build(this._logger);
         } else {
@@ -89,6 +94,16 @@ class ModuleManager {
                 throw new Error("Unknown server type: " + type);
         }
         return prom;
+    }
+
+    registerGuiApps(appDefs){
+        appDefs.forEach((app)=>{
+            if (_.has(this._regGuiModules, app.regName)){
+                throw new Error("Application name has already been registered: " + app.regName);
+            } else {
+                this._regGuiModules[app.regName] = app;
+            }
+        })
     }
 
     getGuiAppInfo(){
