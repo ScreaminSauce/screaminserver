@@ -30,7 +30,7 @@ class ScreaminServer {
                         isSecure: this._config.auth.isSecure,
                         redirectTo: this._config.auth.redirectTo,
                         validateFunc: async (request, session) => {
-
+                            
                             const cached = await cache.get(session.sid);
                             const out = {
                                 valid: !!cached
@@ -38,6 +38,7 @@ class ScreaminServer {
                 
                             if (out.valid) {
                                 out.credentials = cached.account;
+                                out.credentials.scope = cached.account.authorizedApps;
                             }
                 
                             return out;
