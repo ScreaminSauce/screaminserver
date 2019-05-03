@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
