@@ -5,16 +5,23 @@ const inert = require('inert');
 const vision = require('vision');
 const bunyan = require('bunyan');
 const path = require('path');
+const _ = require('lodash');
 
 const HapiAuthCookie = require('hapi-auth-cookie');
-const moduleManager = require('./moduleManager');
+const ModuleManager = require('./moduleManager');
 
 class ScreaminServer {
     constructor(config) {
-        this._config = config;
-        this._server = hapi.Server(config.options);
-        this._logger = bunyan.createLogger({ name: config.name });
-        this._moduleManager = new moduleManager(this._logger, this._config.type, this._server, this._config.wwwDir);
+        this._config = _.defaultsDeep(config, {
+            options: {
+                port: 3000,
+                host: 'localhost'
+            },
+            wwwDir: "public"
+        });
+        this._server = hapi.Server(this._config.options);
+        this._logger = bunyan.createLogger({ name: this._config.name, serializers:bunyan.stdSerializers });
+        this._moduleManager = new ModuleManager(this._logger, this._config.type, this._server, this._config.wwwDir);
     }
 
     _registerAuthentication(){
@@ -26,9 +33,9 @@ class ScreaminServer {
                 .then(()=>{
                     let options = {
                         password: this._config.auth.secret,
-                        cookie: this._config.auth.cookieName,
-                        isSecure: this._config.auth.isSecure,
-                        redirectTo: this._config.auth.redirectTo,
+                        cookie: this._config.auth.cookieName || "screaminCookie",
+                        isSecure: this._config.auth.isSecure || false,
+                        redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
                             
                             const cached = await cache.get(session.sid);
@@ -47,10 +54,7 @@ class ScreaminServer {
                     this._server.auth.strategy('session', 'cookie', options);
                     this._server.auth.default('session');
                 })
-        } else {
-            return Promise.resolve();
         }
-        
     }
 
     _registerStaticRoutes(){
@@ -71,7 +75,7 @@ class ScreaminServer {
                     config: {
                         auth: false
                     }
-                })
+                });
                 this._server.route({
                     method: 'GET',
                     path: '/api/reserved/appInfo',
@@ -81,20 +85,18 @@ class ScreaminServer {
                     config: {
                         auth: false
                     }
-                })
+                });
             })
     }
 
     _registerModules(){
-        let promArr = [];
-        if (this._config && this._config.modules.length > 0){
+        if (_.has(this._config, "modules" ) && this._config.modules.length > 0){
+            let promArr = [];
             this._config.modules.forEach((mod)=>{
                 promArr.push(this._moduleManager.registerModule(mod));
             })
-        } else {
-            throw new Error("Nothing to load, or no configuration to use!");
-        }
-        return Promise.all(promArr);
+            return Promise.all(promArr);
+        } 
     }
 
     startup(){
@@ -104,9 +106,7 @@ class ScreaminServer {
             })
             .then(()=>{
                 if (this._moduleManager.hasGuiModules()){
-                    return this._registerStaticRoutes()
-                } else {
-                    return Promise.resolve();
+                    return this._registerStaticRoutes();
                 }
             })
             .then(()=>{
@@ -122,6 +122,9 @@ class ScreaminServer {
         return this._server.stop()
             .then(() => {
                 this._logger.info("Server stopped");
+            })
+            .catch((err)=>{
+                this._logger.error({error: err}, "Error stopping server");
             })
     }
 }

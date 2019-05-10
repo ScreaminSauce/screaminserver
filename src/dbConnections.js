@@ -22,12 +22,12 @@ class DbConnections {
     }
 
     createConnection(config){
-        this._logger.info({dbConfig: config}, "Creating new DB connection.");
+        this._logger.info("Creating new DB connection: " + config.name);
         return new Promise((resolve, reject)=>{
             if (this._connectionExists(config.name)){ return resolve(); } else {
                 switch(config.type){
                     case "mongo":
-                        MongodbClient.connect(config.url, (err, client)=>{
+                        MongodbClient.connect(config.url, { useNewUrlParser: true }, (err, client)=>{
                             if (err) { return reject(err); }
                             this._connections[config.name] = client.db(config.dbName);
                             return resolve();
@@ -45,8 +45,6 @@ class DbConnections {
             this._connections[name] = connection;
         }
     }
-
-    //closeConnection(name){} - To be implemented...
 }
 
 module.exports = DbConnections;
