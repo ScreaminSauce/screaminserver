@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "bunyan": "^1.8.12",
-    "hapi": "^18.1.0",
-    "hapi-auth-cookie": "^9.1.0",
+    "@hapi/hapi": "^18.1.0",
+    "@hapi/cookie": "^10.0.0",
     "inert": "^5.1.2",
     "lodash": "^4.17.11",
     "mongodb": "^3.1.13",

@@ -1,13 +1,13 @@
 'use strict';
 
-const hapi = require('hapi');
+const hapi = require('@hapi/hapi');
 const inert = require('inert');
 const vision = require('vision');
 const bunyan = require('bunyan');
 const path = require('path');
 const _ = require('lodash');
 
-const HapiAuthCookie = require('hapi-auth-cookie');
+const HapiAuthCookie = require('@hapi/cookie');
 const ModuleManager = require('./moduleManager');
 
 class ScreaminServer {
@@ -32,9 +32,12 @@ class ScreaminServer {
             return this._server.register(HapiAuthCookie)
                 .then(()=>{
                     let options = {
-                        password: this._config.auth.secret,
-                        cookie: this._config.auth.cookieName || "screaminCookie",
-                        isSecure: this._config.auth.isSecure || false,
+                        
+                        cookie: {
+                            name: this._config.auth.cookieName || "screaminCookie",
+                            password: this._config.auth.secret,
+                            isSecure: this._config.auth.isSecure || false
+                        },
                         redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
                             
