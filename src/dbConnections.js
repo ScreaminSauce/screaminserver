@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const MongodbClient = require('mongodb').MongoClient;
+const Knex = require('knex');
 
 class DbConnections {
     constructor(logger){
@@ -23,8 +24,11 @@ class DbConnections {
 
     createConnection(config){
         this._logger.info("Creating new DB connection: " + config.name);
+
         return new Promise((resolve, reject)=>{
-            if (this._connectionExists(config.name)){ return resolve(); } else {
+            if (this._connectionExists(config.name)){ 
+                return resolve(); 
+            } else {
                 switch(config.type){
                     case "mongo":
                         MongodbClient.connect(config.url, { useNewUrlParser: true }, (err, client)=>{
@@ -32,18 +36,32 @@ class DbConnections {
                             this._connections[config.name] = client.db(config.dbName);
                             return resolve();
                         })
-                    break;
+                        break;
+                    case "mysql":
+                        return Promise.resolve()
+                            .then(()=>{
+                                return Knex({
+                                    client: 'mysql',
+                                    version: '5.7',
+                                    connection : {
+                                        host: config.host,
+                                        user: config.user,
+                                        password: config.password,
+                                        database: config.dbName
+                                    }
+                                })
+                            })
+                            .then((knexClient)=>{
+                                this._connections[config.name] = knexClient;
+                                return resolve()
+                            })
+                            .catch((err)=>{
+                                return reject(err);
+                            })
+                        break;  
                 }
             }
         })
-    }
-
-    addConnection(name, connection){
-        if (this._connectionExists(name)){
-            throw new Error("Connection name in use.")
-        } else {
-            this._connections[name] = connection;
-        }
     }
 }
 
