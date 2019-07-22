@@ -13,5 +13,8 @@ By doing this, I can now focus on just writing modules of content that I wish to
 
 As an added benefit, this project can be used to horizontally scale your api/gui!
 
+## Docs
+[JsDocs](https://screaminsauce.github.io/screaminserver/)
+
 ## TODO
 1) Look into containerization
