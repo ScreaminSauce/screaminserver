@@ -94,6 +94,19 @@ class ScreaminServer {
                         auth: false
                     }
                 });
+                
+                if (this._config.defaultGuiRoute){
+                    this._server.route({
+                        method: 'GET',
+                        path: '/',
+                        handler: (response, h)=>{
+                            return h.redirect(this._config.defaultGuiRoute)
+                        },
+                        config: {
+                            auth: false
+                        }
+                    });
+                }
             })
     }
 
