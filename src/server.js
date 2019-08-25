@@ -37,8 +37,8 @@ class ScreaminServer {
             return this._server.register(HapiAuthCookie)
                 .then(()=>{
                     let options = {
-                        
                         cookie: {
+                            ttl: this._config.auth.cookieDurationInMillis || 24 * 60 * 60 * 1000,
                             name: this._config.auth.cookieName || "screaminCookie",
                             password: this._config.auth.secret,
                             isSecure: this._config.auth.isSecure || false
