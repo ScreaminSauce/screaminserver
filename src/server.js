@@ -31,7 +31,7 @@ class ScreaminServer {
 
     _registerAuthentication(){
         if(this._config.auth){
-            const cache = this._server.cache({ segment: 'sessions', expiresIn: 24 * 60 * 60 * 1000 });
+            const cache = this._server.cache({ segment: 'sessions', expiresIn: this._config.auth.sessionDurationInMillis || 24 * 60 * 60 * 1000 });
             this._server.app.cache = cache;
 
             return this._server.register(HapiAuthCookie)
