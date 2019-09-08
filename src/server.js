@@ -22,11 +22,12 @@ class ScreaminServer {
                 port: 3000,
                 host: 'localhost'
             },
+            skipUiBuild: false,
             wwwDir: "public"
         });
         this._server = hapi.Server(this._config.options);
         this._logger = bunyan.createLogger({ name: this._config.name, serializers:bunyan.stdSerializers });
-        this._moduleManager = new ModuleManager(this._logger, this._server, this._config.wwwDir);
+        this._moduleManager = new ModuleManager(this._logger, this._server, this._config);
     }
 
     _registerAuthentication(){

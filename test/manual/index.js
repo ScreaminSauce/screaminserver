@@ -17,6 +17,7 @@ let server = new ScreaminServer({
         port: APPLICATION_PORT,
         host: '0.0.0.0'
     },
+    skipUiBuild: false,
     modules: [TestApiModule,TestGuiModule],
     auth: {
         secret: COOKIE_AUTH_SECRET,

@@ -19,10 +19,11 @@ class ModuleManager {
      * @param {HapiServer} server - A server object capable of registering routes
      * @param {Path} wwwDir - A path for output of static assets built in a module.
      */
-    constructor(logger, server, wwwDir = "public"){
+    constructor(logger, server, {wwwDir = "public", skipUiBuild = false}){
         this._logger = logger;
         this._server = server;
         this._wwwDir = wwwDir;
+        this._skipUiBuild = skipUiBuild;
 
         this._dbConnManager = new dbConnections(this._logger);
         this._hasGuiModules = false;
@@ -69,7 +70,13 @@ class ModuleManager {
             this._logger.info({module: mod.name}, "Deploying to: " + outputFolder);
             
             this._loadGuiModuleApps(webApp);
-            return webApp.build(this._logger);
+            if(this._skipUiBuild){
+                this._logger.info("skipping build of ui modules")
+                return Promise.resolve();
+            }
+            else{
+                return webApp.build(this._logger);
+            }
         } else {
             this._logger.info({module: mod.name}, "No WebApp to be built for module: " + mod.name);
             return Promise.resolve();
