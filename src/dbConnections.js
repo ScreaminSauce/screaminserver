@@ -31,7 +31,7 @@ class DbConnections {
             } else {
                 switch(config.type){
                     case "mongo":
-                        MongodbClient.connect(config.url, { useNewUrlParser: true }, (err, client)=>{
+                        MongodbClient.connect(config.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client)=>{
                             if (err) { return reject(err); }
                             this._connections[config.name] = client.db(config.dbName);
                             return resolve();
