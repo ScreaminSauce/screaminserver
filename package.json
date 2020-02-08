@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
@@ -15,22 +15,22 @@
     "url": "https://github.com/ScreaminSauce/screaminserver/issues"
   },
   "dependencies": {
-    "@hapi/cookie": "^10.0.0",
-    "@hapi/hapi": "^18.1.0",
+    "@hapi/cookie": "^10.1.2",
+    "@hapi/hapi": "^18.0.0",
     "bunyan": "^1.8.12",
     "inert": "^5.1.2",
-    "knex": "^0.18.2",
+    "knex": "^0.19.0",
     "lodash": "^4.17.15",
-    "mongodb": "^3.1.13",
-    "mysql": "^2.17.1",
-    "uuid": "^3.3.2",
+    "mongodb": "^3.5.2",
+    "mysql": "^2.18.1",
+    "uuid": "^3.4.0",
     "vision": "^5.4.4"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.0.3",
-    "mini-css-extract-plugin": "^0.8.0",
-    "nodemon": "^1.19.1",
-    "webpack": "^4.36.1"
+    "copy-webpack-plugin": "^5.1.1",
+    "mini-css-extract-plugin": "^0.8.2",
+    "nodemon": "^1.19.4",
+    "webpack": "^4.41.5"
   }
 }
