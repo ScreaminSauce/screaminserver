@@ -42,7 +42,8 @@ class ScreaminServer {
                             ttl: this._config.auth.cookieDurationInMillis || 24 * 60 * 60 * 1000,
                             name: this._config.auth.cookieName || "screaminCookie",
                             password: this._config.auth.secret,
-                            isSecure: this._config.auth.isSecure || false
+                            isSecure: this._config.auth.isSecure || false,
+                            path: "/"
                         },
                         redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
