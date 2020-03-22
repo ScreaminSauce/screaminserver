@@ -1,8 +1,9 @@
 'use strict';
 
 const hapi = require('@hapi/hapi');
-const inert = require('inert');
-const vision = require('vision');
+const inert = require('@hapi/inert');
+const vision = require('@hapi/vision');
+const joi = require('@hapi/joi');
 const bunyan = require('bunyan');
 const path = require('path');
 const _ = require('lodash');
@@ -26,6 +27,7 @@ class ScreaminServer {
             wwwDir: "public"
         });
         this._server = hapi.Server(this._config.options);
+        this._server.validator(joi);
         this._logger = bunyan.createLogger({ name: this._config.name, serializers:bunyan.stdSerializers });
         this._moduleManager = new ModuleManager(this._logger, this._server, this._config);
     }

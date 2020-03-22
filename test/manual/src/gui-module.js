@@ -9,7 +9,7 @@ class GuiBuilder {
     constructor(outputFolder) {
         this._config = {
             entry: {
-                'test_login': path.resolve(__dirname, "gui/login.js"),
+                'manualtest': path.resolve(__dirname, "gui/manualtest.js"),
             },
             output: {
                 filename: '[name].js',
@@ -47,9 +47,9 @@ class GuiBuilder {
             {
                 urlPath: "/public/index.html",
                 icon: '/public/batdomo.jpg',
-                regName: "manual-test-module",
+                regName: "manualtest",
                 displayName: "Manual Test",
-                description: "simple module for manual testing the GUI server"
+                description: "Simple module for manual testing the GUI server"
             }
         ]
     }
@@ -65,7 +65,7 @@ class GuiBuilder {
                     logger.error(err);
                     reject(err);
                 } else {
-                    logger.info({module: "auth"}, "Webpack build complete for module.")
+                    logger.info({module: "manualtest"}, "Webpack build complete for module.")
                     resolve();
                 }
             });
@@ -75,8 +75,8 @@ class GuiBuilder {
 
 
 module.exports = {
+    name: "manualtest",
     type:"gui",
-    name: "manualTest",
     gui:GuiBuilder
 };
 

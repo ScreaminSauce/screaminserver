@@ -3,3 +3,4 @@ node_modules
 docs
 jsdoc.conf.js
 .git
+public
