@@ -45,24 +45,30 @@ class ScreaminServer {
                             name: this._config.auth.cookieName || "screaminCookie",
                             password: this._config.auth.secret,
                             isSecure: this._config.auth.isSecure || false,
-                            path: "/"
+                            isSameSite: "Lax"
                         },
                         redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
+                            this._logger.info({request, session}, "Starting Hapi validate function.");
                             
-                            const cached = await cache.get(session.sid);
-                            const out = {
-                                valid: !!cached
-                            };
-                
-                            if (out.valid) {
-                                out.credentials = cached.account;
-                                out.credentials.scope = cached.account.authorizedApps;
+                            try {
+                                const cached = await cache.get(session.sid);
+                                const out = {
+                                    valid: !!cached
+                                };
+                    
+                                if (out.valid) {
+                                    out.credentials = cached.account;
+                                    out.credentials.scope = cached.account.authorizedApps;
+                                }
+    
+                                this._logger.info({out}, "End of Hapi validate function.");
+                    
+                                return out;
+                            } catch (err){
+                                this._logger.error({err}, "Error running validation function.")
+                                return {valid: false};
                             }
-
-                            this._logger.info({out}, "Result of check!");
-                
-                            return out;
                         }
                     }
                     this._server.auth.strategy('session', 'cookie', options);
