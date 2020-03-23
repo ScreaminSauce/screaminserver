@@ -49,8 +49,6 @@ class ScreaminServer {
                         },
                         redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
-                            this._logger.info({sessionSid: session.sid, session}, "Starting Hapi validate function.");
-                            
                             try {
                                 const cached = await cache.get(session.sid);
                                 const out = {
@@ -64,7 +62,7 @@ class ScreaminServer {
                     
                                 return out;
                             } catch (err){
-                                this._logger.error({err}, "Error running validation function.")
+                                this._logger.error({err, session, sessionSid: session.sid}, "Error running validation function.");
                                 return {valid: false};
                             }
                         }
