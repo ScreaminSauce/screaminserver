@@ -20,10 +20,13 @@ let server = new ScreaminServer({
     skipUiBuild: false,
     modules: [TestApiModule,TestGuiModule],
     auth: {
+        sessionDurationInMillis: 1000 * 60 * 60 * 24 * 30,
+        cookieDurationInMillis: 1000 * 60 * 60 * 24 * 30,
         secret: COOKIE_AUTH_SECRET,
         cookieName: COOKIE_AUTH_NAME,
         isSecure: COOKIE_AUTH_ISSECURE
-    }
+    },
+    defaultGuiRoute: "/public/manualtest/index.html"
 });
 
 process.on('unhandledRejection', (err) => {

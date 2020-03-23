@@ -10,6 +10,7 @@ class GuiBuilder {
         this._config = {
             entry: {
                 'manualtest': path.resolve(__dirname, "gui/manualtest.js"),
+                'manualtest2': path.resolve(__dirname, "gui/manualtest2.js"),
             },
             output: {
                 filename: '[name].js',

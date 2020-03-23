@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
@@ -27,8 +27,7 @@
     "knex": "^0.20.10",
     "lodash": "^4.17.15",
     "mongodb": "^3.5.5",
-    "mysql": "^2.18.1",
-    "uuid": "^3.4.0"
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "axios": "^0.19.2",
@@ -40,6 +39,7 @@
     "nodemon": "^1.19.4",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
+    "uuid": "^3.4.0",
     "vue": "^2.6.11",
     "webpack": "^4.42.0"
   }

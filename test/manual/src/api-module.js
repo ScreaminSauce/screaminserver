@@ -1,4 +1,5 @@
 const Joi = require('@hapi/joi');
+const uuidv4 = require('uuid/v4');
 
 let api = (logger, basePath, dbConns) => {
     return [
@@ -23,6 +24,36 @@ let api = (logger, basePath, dbConns) => {
                 validate: {
                     payload:{
                         greeting: Joi.string().required()
+                    }
+                }
+            }
+        },
+        {
+            method: "POST",
+            path: basePath + "/auth",
+            handler: (request, h) => {
+                let sid = uuidv4();
+                return request.server.app.cache.set(sid, {account: {name: "Jeff", authorizedApps: ["this1"]}}, 0)
+                    .then(()=>{
+                        request.cookieAuth.set({sid: sid});
+                        return {sid};
+                    })  
+            },
+            config: {
+                auth: false
+            }
+        },
+        {
+            method: "POST",
+            path: basePath + "/test-auth",
+            handler: (request, h) => {
+                return {isAuthed: true};
+                
+            },
+            config: {
+                auth: {
+                    access: {
+                        scope: ["+this1"]
                     }
                 }
             }

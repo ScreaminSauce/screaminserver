@@ -49,7 +49,7 @@ class ScreaminServer {
                         },
                         redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
-                            this._logger.info({sessionSid: session.sid}, "Starting Hapi validate function.");
+                            this._logger.info({sessionSid: session.sid, session}, "Starting Hapi validate function.");
                             
                             try {
                                 const cached = await cache.get(session.sid);
