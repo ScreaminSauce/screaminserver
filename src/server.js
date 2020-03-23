@@ -44,7 +44,6 @@ class ScreaminServer {
                             ttl: this._config.auth.cookieDurationInMillis || 24 * 60 * 60 * 1000,
                             name: this._config.auth.cookieName || "screaminCookie",
                             password: this._config.auth.secret,
-                            clearInvalid: true,
                             isSecure: this._config.auth.isSecure || false,
                             path: "/"
                         },
@@ -60,6 +59,8 @@ class ScreaminServer {
                                 out.credentials = cached.account;
                                 out.credentials.scope = cached.account.authorizedApps;
                             }
+
+                            this._logger.info({out}, "Result of check!");
                 
                             return out;
                         }
