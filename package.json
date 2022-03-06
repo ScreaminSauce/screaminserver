@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@hapi/cookie": "^11.0.0",
-    "@hapi/hapi": "^19.0.0",
+    "@hapi/hapi": "^20.0.0",
     "@hapi/inert": "^6.0.1",
     "@hapi/vision": "^6.0.0",
     "bunyan": "^1.8.15",
