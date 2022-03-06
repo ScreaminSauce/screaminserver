@@ -1,11 +1,11 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "manual-test": "npx nodemon -L --inspect=0.0.0.0:9229 test/manual/index.js --watch src --watch test/manual",
+    "manualtest": "npx nodemon -L --inspect=0.0.0.0:9229 test/manual/index.js --watch src --watch test/manual",
     "docs": "npx jsdoc -c jsdoc.conf.js"
   },
   "author": "Jeff Claybaugh",
@@ -24,6 +24,7 @@
     "@hapi/inert": "^6.0.1",
     "@hapi/vision": "^6.0.0",
     "bunyan": "^1.8.15",
+    "joi": "^17.0.6",
     "knex": "^1.0.3",
     "lodash": "^4.17.21",
     "mongodb": "^4.4.1",

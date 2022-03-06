@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const uuidv4 = require('uuid').v4;
 
 let api = (logger, basePath, dbConns) => {
