@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "4.0.7",
+  "version": "5.0.0",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "url": "https://github.com/ScreaminSauce/screaminserver/issues"
   },
   "engines": {
-    "node": ">12.0.0",
+    "node": ">16.0.0",
     "npm": ">6.0.0"
   },
   "dependencies": {
@@ -23,24 +23,24 @@
     "@hapi/hapi": "^19.0.0",
     "@hapi/inert": "^6.0.1",
     "@hapi/vision": "^6.0.0",
-    "bunyan": "^1.8.12",
-    "knex": "^0.20.10",
-    "lodash": "^4.17.15",
-    "mongodb": "^3.5.5",
+    "bunyan": "^1.8.15",
+    "knex": "^1.0.3",
+    "lodash": "^4.17.21",
+    "mongodb": "^4.4.1",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.26.0",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "css-loader": "^3.4.2",
-    "mini-css-extract-plugin": "^0.8.2",
-    "node-sass": "^4.13.1",
-    "nodemon": "^1.19.4",
-    "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.1",
-    "uuid": "^3.4.0",
+    "copy-webpack-plugin": "^10.2.4",
+    "css-loader": "^6.7.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "node-sass": "^7.0.1",
+    "nodemon": "^2.0.15",
+    "sass-loader": "^12.6.0",
+    "style-loader": "^3.3.1",
+    "uuid": "^8.3.2",
     "vue": "^2.6.11",
-    "webpack": "^4.42.0"
+    "webpack": "^5.70.0"
   }
 }

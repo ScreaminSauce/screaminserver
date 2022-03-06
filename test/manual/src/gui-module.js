@@ -18,13 +18,6 @@ class GuiBuilder {
                 sourceMapFilename: '[name].map'
             },
             devtool: false,
-            node: {
-                fs: 'empty',
-                net: 'empty',
-                tls: 'empty',
-                dns: 'empty',
-                global: true
-            },
             module: {
                 rules: [{
                     test: /\.s[c|a]ss$/,
@@ -33,11 +26,12 @@ class GuiBuilder {
             },
             plugins: [
                 new CleanWebpackPlugin(),
-                new CopyWebpackPlugin([{
-                    loglevel: 'debug',
-                    from: path.resolve(__dirname + '/gui/static' ) + '/**',
-                    context: path.resolve(__dirname + '/gui/static')
-                }]),
+                new CopyWebpackPlugin({
+                    patterns: [
+                        { from: path.resolve(__dirname + '/gui/static' ) + '/**', 
+                        context: path.resolve(__dirname + '/gui/static')}
+                    ]
+                }),
                 new MiniCssExtractPlugin()
             ]
         }
@@ -58,11 +52,14 @@ class GuiBuilder {
     build(logger) {
         return new Promise((resolve, reject) => {
             webpack([this._config], (err, stats) => {
-                if (err || stats.hasErrors()) {
+                if (stats && stats.hasErrors()){
                     let info = stats.toJson();
                     info.errors.forEach((sError) => {
                         logger.error(JSON.stringify(sError, null, 2));
                     })
+                    logger.error(err);
+                }
+                if (err) {
                     logger.error(err);
                     reject(err);
                 } else {
