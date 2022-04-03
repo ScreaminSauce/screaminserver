@@ -1,6 +1,6 @@
 {
   "name": "@screaminsauce/screaminserver",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "A server capable of loading API routes, GUI webapps, or both via Hapi.js",
   "main": "src/server.js",
   "scripts": {
@@ -19,29 +19,29 @@
     "npm": ">6.0.0"
   },
   "dependencies": {
-    "@hapi/cookie": "^11.0.0",
-    "@hapi/hapi": "^20.0.0",
-    "@hapi/inert": "^6.0.1",
-    "@hapi/vision": "^6.0.0",
+    "@hapi/cookie": "^11.0.2",
+    "@hapi/hapi": "^20.2.1",
+    "@hapi/inert": "^6.0.5",
+    "@hapi/vision": "^6.1.0",
     "bunyan": "^1.8.15",
     "joi": "^17.0.6",
-    "knex": "^1.0.3",
+    "knex": "^1.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.4.1",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^10.2.4",
-    "css-loader": "^6.7.0",
+    "css-loader": "^6.7.1",
     "mini-css-extract-plugin": "^2.6.0",
     "node-sass": "^7.0.1",
     "nodemon": "^2.0.15",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
     "uuid": "^8.3.2",
-    "vue": "^2.6.11",
-    "webpack": "^5.70.0"
+    "vue": "^2.6.14",
+    "webpack": "^5.71.0"
   }
 }
