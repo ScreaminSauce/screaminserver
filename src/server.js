@@ -45,7 +45,8 @@ class ScreaminServer {
                             name: this._config.auth.cookieName || "screaminCookie",
                             password: this._config.auth.secret,
                             isSecure: this._config.auth.isSecure || false,
-                            isSameSite: "Lax"
+                            isSameSite: "Lax",
+                            path: "/api"
                         },
                         redirectTo: this._config.auth.redirectTo || false,
                         validateFunc: async (request, session) => {
