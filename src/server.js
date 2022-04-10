@@ -71,6 +71,8 @@ class ScreaminServer {
                     this._server.auth.strategy('session', 'cookie', options);
                     this._server.auth.default('session');
                 })
+        } else {
+            return Promise.resolve();
         }
     }
 
